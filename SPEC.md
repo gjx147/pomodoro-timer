@@ -57,7 +57,7 @@
 - **框架**: Electron
 - **前端**: HTML5 + CSS3 + Vanilla JavaScript
 - **构建**: electron-builder
-- **窗口**: 400x500px，不可调整大小
+- **窗口**: 500x650px，不可调整大小
 
 ## 5. 验收标准
 

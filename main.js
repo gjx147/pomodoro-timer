@@ -22,9 +22,12 @@ let isQuitting = false;
  */
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 400,
-    height: 500,
-    resizable: false,           // 固定窗口大小
+    width: 580,
+    height: 600,
+    resizable: true,
+    minWidth: 400,
+    minHeight: 500,
+    autoResize: true,           // 固定窗口大小
     center: true,                // 屏幕中央显示
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')

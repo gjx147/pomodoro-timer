@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --dir"
+    "build": "electron-builder --win",
+    "build:dir": "electron-builder --dir"
   },
   "author": "",
   "license": "MIT",
@@ -15,7 +16,21 @@
   },
   "build": {
     "win": {
-      "target": "dir"
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "gjx147",
+      "repo": "pomodoro-timer"
+    },
+    "directories": {
+      "output": "./release"
     },
     "files": [
       "**/*",
