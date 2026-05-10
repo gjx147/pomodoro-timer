@@ -1,0 +1,312 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-color: #F5F5F5;
+  --text-color: #333333;
+  --accent-color: #4CAF50;
+  --secondary-color: #808080;
+  --tertiary-color: #9E9E9E;
+  --button-bg: #E0E0E0;
+  --button-hover: #BDBDBD;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --bg-color: #2D2D2D;
+  --text-color: #E0E0E0;
+  --accent-color: #4CAF50;
+  --secondary-color: #808080;
+  --tertiary-color: #9E9E9E;
+  --button-bg: #424242;
+  --button-hover: #616161;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.app-container {
+  width: 400px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.title-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.powered-by {
+  font-size: 10px;
+  color: var(--secondary-color);
+  margin-top: 2px;
+}
+
+.settings-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-color);
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.settings-btn:hover {
+  opacity: 1;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.mode-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mode-btn {
+  padding: 8px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: var(--button-bg);
+  color: var(--text-color);
+  transition: all 0.2s;
+}
+
+.mode-btn:hover {
+  background-color: var(--button-hover);
+}
+
+.mode-btn.active {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.timer-display {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin-bottom: 30px;
+}
+
+.timer-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.timer-bg {
+  fill: none;
+  stroke: var(--button-bg);
+  stroke-width: 8;
+}
+
+.timer-progress {
+  fill: none;
+  stroke: var(--accent-color);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 565.48;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.timer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 72px;
+  font-weight: 300;
+}
+
+.timer-label {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.pomodoro-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.pomodoro-label {
+  font-size: 14px;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+.pomodoro-dots {
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--button-bg);
+  transition: background-color 0.3s;
+}
+
+.dot.filled {
+  background-color: var(--accent-color);
+}
+
+.controls {
+  display: flex;
+  gap: 15px;
+}
+
+.control-btn {
+  padding: 12px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.control-btn.start {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.control-btn.start:hover {
+  background-color: #388E3C;
+}
+
+.control-btn.start.paused {
+  background-color: var(--secondary-color);
+}
+
+.control-btn.start.paused:hover {
+  background-color: #606060;
+}
+
+.control-btn.reset,
+.control-btn.skip {
+  background-color: var(--button-bg);
+  color: var(--text-color);
+}
+
+.control-btn.reset:hover,
+.control-btn.skip:hover {
+  background-color: var(--button-hover);
+}
+
+.settings-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-color);
+  padding: 20px;
+  transition: opacity 0.3s;
+  z-index: 10;
+}
+
+.settings-panel.hidden {
+  display: none;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.settings-header h2 {
+  font-size: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--text-color);
+  line-height: 1;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--button-bg);
+}
+
+.setting-item label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.setting-item select {
+  padding: 8px 12px;
+  border: 1px solid var(--button-bg);
+  border-radius: 5px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.setting-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}

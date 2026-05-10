@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>番茄钟</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="title-area">
+        <h1 class="title">番茄钟</h1>
+        <span class="powered-by">powered by 郭建巡</span>
+      </div>
+      <button class="settings-btn" id="settingsBtn">⚙</button>
+    </header>
+
+    <main class="main">
+      <div class="mode-selector">
+        <button class="mode-btn active" id="pomodoroMode">番茄模式</button>
+        <button class="mode-btn" id="gameMode">游戏模式</button>
+      </div>
+
+      <div class="timer-display" id="timerDisplay">
+        <svg class="timer-svg" viewBox="0 0 200 200">
+          <circle class="timer-bg" cx="100" cy="100" r="90"></circle>
+          <circle class="timer-progress" id="timerProgress" cx="100" cy="100" r="90"></circle>
+        </svg>
+        <div class="timer-text">
+          <span id="minutes">25</span>:<span id="seconds">00</span>
+        </div>
+        <div class="timer-label" id="timerLabel">专注时间</div>
+      </div>
+
+      <div class="pomodoro-count">
+        <span class="pomodoro-label">番茄数</span>
+        <div class="pomodoro-dots" id="pomodoroDots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="control-btn reset" id="resetBtn">重置</button>
+        <button class="control-btn start" id="startBtn">开始</button>
+        <button class="control-btn skip" id="skipBtn">跳过</button>
+      </div>
+    </main>
+
+    <div class="settings-panel hidden" id="settingsPanel">
+      <div class="settings-header">
+        <h2>设置</h2>
+        <button class="close-btn" id="closeSettings">×</button>
+      </div>
+      <div class="settings-content">
+        <div class="setting-item">
+          <label>主题</label>
+          <select id="themeSelect">
+            <option value="light">浅色</option>
+            <option value="dark">深色</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>
+            <input type="checkbox" id="alwaysOnTop">
+            窗口置顶
+          </label>
+        </div>
+        <div class="setting-item">
+          <label>
+            <input type="checkbox" id="soundEnabled" checked>
+            声音提醒
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="alarmSound" preload="auto">
+    <source src="alarm.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
