@@ -4,6 +4,8 @@ Name "Pomodoro Timer"
 OutFile "release\pomodoro-timer-setup.exe"
 InstallDir "$PROGRAMFILES64\PomodoroTimer"
 InstallDirRegKey HKLM "Software\PomodoroTimer" "InstallPath"
+Icon "icon.ico"
+UninstallIcon "icon.ico"
 
 Section "Install"
   SetOutPath "$INSTDIR"
