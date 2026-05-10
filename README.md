@@ -27,6 +27,10 @@
 - 最小化到系统托盘
 - 右键托盘菜单（显示/退出）
 
+## 界面预览
+
+![番茄钟界面](https://raw.githubusercontent.com/gjx147/pomodoro-timer/master/screenshot.png)
+
 ## 下载安装
 
 直接从 [GitHub Releases](https://github.com/gjx147/pomodoro-timer/releases/latest) 下载：
