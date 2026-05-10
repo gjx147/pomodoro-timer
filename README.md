@@ -2,22 +2,24 @@
 
 一个简洁高效的番茄工作法计时器，支持番茄模式和游戏模式。
 
-![番茄钟](https://img.shields.io/badge/Pomodoro-Timer-4CAF50?style=flat-square)
+![Pomodoro Timer](https://img.shields.io/badge/Pomodoro-Timer-4CAF50?style=flat-square)
+![Electron](https://img.shields.io/badge/Electron-28.0.0-47848F?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ## 功能特点
 
-### 🎯 番茄模式
+### 番茄模式
 - 25分钟专注工作
 - 5分钟短休息
 - 每4个番茄后15分钟长休息
 - 番茄计数显示
 
-### 🎮 游戏模式
+### 游戏模式
 - 40分钟游戏计时
 - 10分钟休息
 - 按次计数
 
-### ⚙️ 其他功能
+### 其他功能
 - 桌面通知提醒
 - 声音提醒
 - 主题切换（浅色/深色）
@@ -25,47 +27,35 @@
 - 最小化到系统托盘
 - 右键托盘菜单（显示/退出）
 
-## 界面预览
+## 下载安装
 
-```
-┌─────────────────────────┐
-│ 番茄钟                  │
-│ powered by 郭建巡    ⚙  │
-├─────────────────────────┤
-│  [番茄模式] [游戏模式]   │
-│                         │
-│      ┌─────────┐        │
-│      │  25:00  │        │
-│      │  专注时间 │        │
-│      └─────────┘        │
-│                         │
-│      ● ● ○ ○           │
-│       番茄数            │
-│                         │
-│   [重置] [开始] [跳过]   │
-└─────────────────────────┘
-```
+直接从 [GitHub Releases](https://github.com/gjx147/pomodoro-timer/releases/latest) 下载：
 
-## 安装运行
+| 文件 | 说明 |
+|------|------|
+| `pomodoro-timer-setup.exe` | NSIS 安装包 (推荐) |
+| `pomodoro-timer-portable.zip` | 便携版，解压即用 |
 
-### 开发模式
+## 开发
+
 ```bash
+# 安装依赖
 npm install
+
+# 开发模式
 npm start
-```
 
-### 构建 exe
-```bash
-npm run build
-```
+# 打包 (electron-forge)
+npm run make
 
-构建完成后，exe 文件位于 `dist/win-unpacked/` 目录。
+# 或使用 NSIS 手动打包
+makensis installer.nsi
+```
 
 ## 技术栈
 
 - **框架**: Electron
-- **前端**: HTML5 + CSS3 + JavaScript
-- **构建工具**: electron-builder
+- **构建工具**: electron-forge + NSIS
 
 ## 项目结构
 
@@ -77,6 +67,7 @@ pomodoro-timer/
 ├── index.html       # 主页面
 ├── styles.css       # 样式文件
 ├── package.json     # 项目配置
+├── installer.nsi    # NSIS 安装脚本
 └── SPEC.md          # 功能规格说明
 ```
 
