@@ -14,11 +14,19 @@ const STATE = { WORK: 'work', SHORT_BREAK: 'short_break', LONG_BREAK: 'long_brea
 const MODE = { POMODORO: 'pomodoro', GAME: 'game' };
 
 const LABELS = {
-  POMODORO_WORK: '专注时间',
-  POMODORO_SHORT: '短休息',
-  POMODORO_LONG: '长休息',
-  GAME_WORK: '游戏时间',
-  GAME_BREAK: '游戏休息'
+  pomodoro_work: '专注时间',
+  pomodoro_short_break: '短休息',
+  pomodoro_long_break: '长休息',
+  game_work: '游戏时间',
+  game_break: '游戏休息'
+};
+
+const ACCENT_COLORS = {
+  pomodoro_work: '#4CAF50',
+  pomodoro_short_break: '#42A5F5',
+  pomodoro_long_break: '#AB47BC',
+  game_work: '#FF7043',
+  game_break: '#26A69A'
 };
 
 let currentMode = MODE.POMODORO;
@@ -29,6 +37,10 @@ let isRunning = false;
 let pomodoroCount = 0;
 let timerInterval = null;
 let soundEnabled = true;
+
+// Date-based 精确计时
+let startedAt = 0;
+let pausedRemaining = 0;
 
 const minutesEl = document.getElementById('minutes');
 const secondsEl = document.getElementById('seconds');
@@ -64,16 +76,13 @@ function getTotalTime() {
          currentState === STATE.SHORT_BREAK ? SHORT_BREAK_TIME : LONG_BREAK_TIME;
 }
 
-function getStateLabel() {
-  if (currentMode === MODE.GAME) {
-    return currentState === STATE.WORK ? LABELS.GAME_WORK : LABELS.GAME_BREAK;
-  }
-  return currentState === STATE.WORK ? LABELS.POMODORO_WORK :
-         currentState === STATE.SHORT_BREAK ? LABELS.POMODORO_SHORT : LABELS.POMODORO_LONG;
+function getStateKey() {
+  return `${currentMode}_${currentState}`;
 }
 
 function refreshUI() {
-  timerLabel.textContent = getStateLabel();
+  timerLabel.textContent = LABELS[getStateKey()];
+  updateAccentColor();
   updateDisplay();
 }
 
@@ -82,7 +91,11 @@ function updateDisplay() {
   const seconds = timeRemaining % 60;
   minutesEl.textContent = minutes.toString().padStart(2, '0');
   secondsEl.textContent = seconds.toString().padStart(2, '0');
-  timerProgress.style.strokeDashoffset = CIRCUMFERENCE * (1 - (timeRemaining / totalTime));
+  timerProgress.style.strokeDashoffset = CIRCUMFERENCE * (1 - timeRemaining / totalTime);
+}
+
+function updateAccentColor() {
+  document.documentElement.style.setProperty('--accent-color', ACCENT_COLORS[getStateKey()]);
 }
 
 function updatePomodoroDots() {
@@ -91,7 +104,7 @@ function updatePomodoroDots() {
     return;
   }
   dotElements.forEach((dot, i) => {
-    dot.classList.toggle('filled', i < pomodoroCount % 4);
+    dot.classList.toggle('filled', i < pomodoroCount % POMODOROS_FOR_LONG_BREAK);
   });
 }
 
@@ -113,14 +126,13 @@ function showNotification() {
 function transitionToBreak() {
   const isLongBreak = currentMode === MODE.POMODORO && pomodoroCount % POMODOROS_FOR_LONG_BREAK === 0;
   currentState = isLongBreak ? STATE.LONG_BREAK : STATE.SHORT_BREAK;
-  timeRemaining = totalTime = currentMode === MODE.GAME ? GAME_BREAK_TIME :
-                  isLongBreak ? LONG_BREAK_TIME : SHORT_BREAK_TIME;
+  timeRemaining = totalTime = getTotalTime();
 }
 
 function switchState() {
   if (currentState !== STATE.WORK) {
     currentState = STATE.WORK;
-    timeRemaining = totalTime = currentMode === MODE.GAME ? GAME_WORK_TIME : WORK_TIME;
+    timeRemaining = totalTime = getTotalTime();
     refreshUI();
     return;
   }
@@ -135,10 +147,11 @@ function switchState() {
 }
 
 function tick() {
-  if (timeRemaining > 0) {
-    timeRemaining--;
-    updateDisplay();
-  } else {
+  const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+  timeRemaining = Math.max(0, pausedRemaining - elapsed);
+  updateDisplay();
+
+  if (timeRemaining <= 0) {
     stopTimer();
     playSound();
     showNotification();
@@ -155,21 +168,30 @@ function startTimer() {
   isRunning = true;
   startBtn.textContent = '暂停';
   startBtn.classList.add('paused');
-  timerInterval = setInterval(tick, 1000);
+  pausedRemaining = timeRemaining;
+  startedAt = Date.now();
+  timerInterval = setInterval(tick, 200);
 }
 
 function stopTimer() {
+  if (!isRunning) return;
   isRunning = false;
   startBtn.textContent = '开始';
   startBtn.classList.remove('paused');
   clearInterval(timerInterval);
   timerInterval = null;
+  // 保存精确的剩余时间
+  if (startedAt) {
+    const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+    timeRemaining = Math.max(0, pausedRemaining - elapsed);
+    updateDisplay();
+  }
 }
 
 function reset() {
   stopTimer();
   currentState = STATE.WORK;
-  timeRemaining = totalTime = currentMode === MODE.GAME ? GAME_WORK_TIME : WORK_TIME;
+  timeRemaining = totalTime = getTotalTime();
   refreshUI();
 }
 
@@ -188,7 +210,7 @@ function switchMode(mode) {
   currentMode = mode;
   currentState = STATE.WORK;
   pomodoroCount = 0;
-  timeRemaining = totalTime = mode === MODE.GAME ? GAME_WORK_TIME : WORK_TIME;
+  timeRemaining = totalTime = getTotalTime();
   pomodoroModeBtn.classList.toggle('active', mode === MODE.POMODORO);
   gameModeBtn.classList.toggle('active', mode === MODE.GAME);
   refreshUI();
@@ -210,6 +232,34 @@ closeSettings.addEventListener('click', () => settingsPanel.classList.add('hidde
 themeSelect.addEventListener('change', (e) => document.body.classList.toggle('dark', e.target.value === 'dark'));
 alwaysOnTopCheckbox.addEventListener('change', (e) => window.electronAPI.setAlwaysOnTop(e.target.checked));
 soundCheckbox.addEventListener('change', (e) => soundEnabled = e.target.checked);
+
+// ============================================
+// 键盘快捷键
+// ============================================
+
+document.addEventListener('keydown', (e) => {
+  // 输入框内不触发快捷键
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+  switch (e.code) {
+    case 'Space':
+      e.preventDefault();
+      isRunning ? stopTimer() : startTimer();
+      break;
+    case 'KeyR':
+      reset();
+      break;
+    case 'KeyS':
+      skip();
+      break;
+    case 'Digit1':
+      switchMode(MODE.POMODORO);
+      break;
+    case 'Digit2':
+      switchMode(MODE.GAME);
+      break;
+  }
+});
 
 // ============================================
 // 初始化

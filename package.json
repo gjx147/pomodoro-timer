@@ -1,6 +1,6 @@
 {
   "name": "pomodoro-timer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "番茄钟桌面应用",
   "main": "main.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "make": "electron-forge make",
     "package": "electron-forge package"
   },
-  "author": "",
+  "author": "gjx14",
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.2.0",
